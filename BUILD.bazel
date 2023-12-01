@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "nogo")
+
+go_library(
+    name = "my-lib",
+    srcs = ["my-lib/panicboi.go"],
+    importpath = "example/mylib",
+    visibility = ["//visibility:private"],
+)
+
+go_library(
+    name = "main_lib",
+    srcs = ["main.go"],
+    importpath = "example/main",
+    visibility = ["//visibility:private"],
+    deps = [":my-lib"],
+)
+
+go_binary(
+    name = "bin",
+    embed = [":main_lib"],
+    visibility = ["//visibility:public"],
+)
+
+nogo(
+    name = "nilaway_nogo",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@org_uber_go_nilaway//:go_default_library",
+    ],
+)
